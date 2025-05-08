@@ -1739,9 +1739,9 @@ function  classJSON (jsonDoc) {
   document.getElementById('nav-sunday').children[0].children[1].innerHTML = html_text;
 }
 
-function loadSubject(){
+function loadSubject(flie){
   const select = document.getElementById("subject-select");
-  fetch("./json/contact_subject.json")
+  fetch(flie)
   .then(jsonDoc => jsonDoc.json())
   .then(jsonObj=>{
     console.log(jsonObj.contactSubject);
@@ -1765,6 +1765,12 @@ window.onload = function(){
   const contact = document.getElementById("Contact-head");
   contact.innerHTML = "WooooW";
 
+loadDoc("./xml/class_sunday.xml", classXML);
+loadDoc("./json/class_sunday.json", classJSON);
+//loadSubject('./json/contact_subject.json');
+loadSubject('http://localhost:4040/');
+
+  
  };
 </script>
 
