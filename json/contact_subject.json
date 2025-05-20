@@ -1,10 +1,11 @@
 {
   "contactSubject": [
-    "General Enqury",
+    "General Enquiry",
     "Class",
-    "Scheudule",
+    "Schedule",
     "Instructor",
     "Price",
+    "Location",
     "Other"
   ]
 }

@@ -8,14 +8,14 @@ const userFilePath = path.join(__dirname, '..', 'data', 'user.json');
 router.post('/', (req, res) => {
   const { firstName, lastName, email, password, category, occupation } = req.body;
 
-  if (!email || !password || !firstName || !lastName || !category || !occupation) {
-    return res.status(400).send("Missing required fields.");
+  if (!firstName || !lastName || !email || !password || !category || !occupation) {
+    return res.status(400).json({ error: 'Missing required fields.' });
   }
 
   fs.readFile(userFilePath, 'utf8', (err, data) => {
     if (err && err.code !== 'ENOENT') {
       console.error('Error reading user file:', err);
-      return res.status(500).send("Server error");
+      return res.status(500).json({ error: 'Server error' });
     }
 
     let users = [];
@@ -23,32 +23,24 @@ router.post('/', (req, res) => {
       if (data) users = JSON.parse(data);
     } catch (parseErr) {
       console.error('Error parsing user JSON:', parseErr);
-      return res.status(500).send("Server error");
+      return res.status(500).json({ error: 'Server error' });
     }
 
     const existingUser = users.find(user => user.email === email);
     if (existingUser) {
-      return res.send("Email already registered.");
+      return res.status(409).json({ error: 'Email already registered.' });
     }
 
-    const newUser = {
-      firstName,
-      lastName,
-      email,
-      password,
-      category,
-      occupation
-    };
-
+    const newUser = { firstName, lastName, email, password, category, occupation };
     users.push(newUser);
 
     fs.writeFile(userFilePath, JSON.stringify(users, null, 2), err => {
       if (err) {
         console.error('Error writing user file:', err);
-        return res.status(500).send("Server error");
+        return res.status(500).json({ error: 'Server error' });
       }
-
-      res.send("Register successfully.");
+      console.log('User registered successfully:', newUser);
+      return res.status(201).json({ message: 'Register successfully.' });
     });
   });
 });
